@@ -1,8 +1,9 @@
 import express from "express";
-import ConnectDB from "./config/connectDB"
-import ContactModel from "./models/contact.model"
-import env from 'dotenv'
+import ConnectDB from "./config/connectDB";
+import env from 'dotenv';
+import configViewEngine from "./config/viewEngine"
 
+// init app
 let app = express();
 
 //environment variable or you can say constants
@@ -11,24 +12,22 @@ env.config();
 //connect to mongodb
 ConnectDB();
 
+
+// config view engine
+configViewEngine(app)
+
+
 var hostName = "localhost";
 var port = 8017;
 
 
 
-app.get("/test-database", async (req, res) => {
-    try {
-        let item = {
-            userId: "3423423",
-            contactId: "5678765433456"
-        }
+app.get("/",  (req, res) => {
+   return res.render("main/master")
+});
 
-        let contact = await ContactModel.createNew(item);
-        res.send(contact)
-    } catch (error) {
-        console.log(error);
-    }
-
+app.get("/login-register",  (req, res) => {
+   return res.render("auth/loginRegister")
 });
 
 app.listen(process.env.APP_PORT, process.env.APP_HOST, () => {
